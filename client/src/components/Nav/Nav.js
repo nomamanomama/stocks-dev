@@ -3,8 +3,11 @@ import React from "react";
 const Nav = () => (
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
     <a className="navbar-brand" href="/">
-      React Reading List
+      New York Times Article Scrubber
     </a>
+    <p className="nav-item">
+      Search for and annotate articles of interest!
+    </p>
   </nav>
 );
 

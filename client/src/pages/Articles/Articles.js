@@ -1,113 +1,110 @@
 import React, { Component } from "react";
-import DeleteBtn from "../../components/DeleteBtn";
-import Jumbotron from "../../components/Jumbotron";
 import API from "../../utils/API";
-import { Link } from "react-router-dom";
-import { Col, Row, Container } from "../../components/Grid";
-import { List, ListItem } from "../../components/List";
-import { Input, TextArea, FormBtn } from "../../components/Form";
+
+// import { Link } from "react-router-dom";
+import { Container } from "../../components/Grid";
+import Search from "../../components/Search";
+import Results from "../../components/Results";
+import Save from "../../components/Save";
 
 class Articles extends Component {
   state = {
-    articles: [],
+    results: [],
+    saved: [],
     title: "",
     date: "",
-    url: ""
+    url: "", 
+    topic: "",
+    startyear: "",
+    endyear: ""
   };
 
   componentDidMount() {
-    this.loadArticles();
-  }
+    this.loadResultArticles("");
+    this.loadSavedArticles();
+  };
 
-  loadArticles = () => {
-    API.getArticles()
-      .then(res =>
-        this.setState({ articles: res.data, title: "", date: "", url: "" })
+  loadResultArticles = (query) => {
+    console.log(query);
+    API.getNewArticles(query)
+      .then(res => {
+          console.log(res);
+          this.setState({ results: res.data });
+        }
       )
       .catch(err => console.log(err));
   };
 
-  deleteArticle = id => {
-    API.deleteArticle(id)
-      .then(res => this.loadArticle())
+  loadSavedArticles = () => {
+    API.getArticles()
+      .then(res =>
+        this.setState({ saved: res.data, title: "", date: "", url: "" })
+      )
       .catch(err => console.log(err));
   };
 
-  handleInputChange = event => {
+  saveArticle = (id) => {
+    API.saveArticle(id)
+      .then(res => this.loadSavedArticles())
+      .catch(err => console.log(err));
+  };
+
+  deleteArticle = (id) => {
+    API.deleteArticle(id)
+      .then(res => this.loadSavedArticles())
+      .catch(err => console.log(err));
+  };
+
+  handleInputChange = (event) => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
 
-  handleFormSubmit = event => {
+  handleFormSubmit = (event) => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveArticle({
-        title: this.state.title,
-        date: this.state.date,
-        url: this.state.url
-      })
-        .then(res => this.loadArticles())
-        .catch(err => console.log(err));
+    //if search was clicked
+    if (this.state.topic) {
+      //build query from topic, startyear, endyear
+      let query = this.state.topic;
+      if(this.state.startyear !== "")
+        query += "&begin_date=" + this.state.startyear + "0101";
+      if (this.state.endyear !== "")
+        query += "&end_date=" + this.state.endyear + "0101";
+
+      this.loadResultArticles(query);
     }
   };
 
   render() {
     return (
       <Container fluid>
-        <div className="Row">
-          <div className="col-md-6">
-            <Jumbotron>
-              <h1>NYT Article</h1>
-            </Jumbotron>
-            <form>
-              <Input
-                value={this.state.topic}
-                onChange={this.handleInputChange}
-                name="topic"
-                placeholder="Topic (required)"
-              />
-              <Input
-                value={this.state.startyear}
-                onChange={this.handleInputChange}
-                name="startyear"
-                placeholder="Start Year (Optional)"
-              />
-              <Input
-                value={this.state.endyear}
-                onChange={this.handleInputChange}
-                name="endyear"
-                placeholder="End Year (Optional)"
-              />
-              <FormBtn
-                disabled={!(this.state.topic)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit Book
-              </FormBtn>
-            </form>
+        <div className="row">
+          <div className="col-md-12">
+            <Search 
+              topic={this.state.topic}
+              endyear={this.state.endyear}
+              startyear={this.state.startyear}
+              handleInputChange={this.handleInputChange}
+              handleFormSubmit={this.handleFormSubmit}
+          />
           </div>
-          <div className="col-md-6">
-            <Jumbotron>
-              <h1>Saved Articles</h1>
-            </Jumbotron>
-            {this.state.articles.length ? (
-              <List>
-                {this.state.articles.map(book => (
-                  <ListItem key={article._id}>
-                    <Link to={"/articles/" + article._id}>
-                      <strong>
-                        {article.title}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteArticle(article._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <Results
+              articles={this.state.results}
+              saveArticle={this.saveArticle}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <Save
+              articles={this.state.saved}
+              deleteArticle = {this.deleteArticle}
+            />
           </div>
         </div>
       </Container>
