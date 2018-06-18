@@ -1,5 +1,5 @@
 const db = require("../models");
-const axios = require("axios");
+const request = require("request");
 
 // Defining methods for the articlesController
 module.exports = {
@@ -38,21 +38,28 @@ module.exports = {
   },
   search: function(req, res) {
     console.log("searching for nytimes articles");
-    const BASEURL = "http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=";
-    const APIKEY = "&api-key=005ffad83ef24e5aa4a4232b7c24957b";
-    const query = BASEURL + req.params.query + APIKEY;
-    console.log(query);
+    const APIKEY = "b669c8f7a75b4f6aa51c7ea82d69ed31";
+    let searchterms = "top+stories";
+    if (req.params.query) {
+        console.log("query attached");
+        searchterms = req.params.query;
+    }
 
-    axios
-      .get(query)
-      .then(response => {
-        console.log(response)
-        res.json(response) // <= send data to the client
-      })
-      .catch(err => {
-        console.log(err)
-        res.send({ err }) // <= send error
-      });
+    console.log("searchterms: " + req.params.query);
+    // Built by LucyBot. www.lucybot.com
+    request.get({
+      url: "https://api.nytimes.com/svc/search/v2/articlesearch.json",
+      qs: {
+        'api-key': APIKEY,
+        'fq': searchterms
+      },
+    }, function (err, response, body) {
+      body = JSON.parse(body);
+      
+      console.log(body);
+      
+      res.send(body);
+    })
   }
 
 };

@@ -16,7 +16,9 @@ export default {
   },
   // Saves an article to the database
   saveArticle: function(articleData) {
-    return axios.post("/api/articles", articleData);
+    return axios.post("/api/articles", articleData)
+            .then(response => {console.log(response)})
+            .catch(error => {console.log(error)});
   },
   getNewArticles: function (query) {
     return axios.get("/api/articles/nyt/" + query);

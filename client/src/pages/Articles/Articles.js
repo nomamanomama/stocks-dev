@@ -1,57 +1,28 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
-
-// import { Link } from "react-router-dom";
+import {Input, FormBtn} from "../../components/Form";
 import { Container } from "../../components/Grid";
-import Search from "../../components/Search";
 import Results from "../../components/Results";
 import Save from "../../components/Save";
 
 class Articles extends Component {
   state = {
-    results: [],
-    saved: [],
-    title: "",
-    date: "",
-    url: "", 
+    results:[],
+    saved:[],
     topic: "",
     startyear: "",
     endyear: ""
   };
 
-  componentDidMount() {
-    this.loadResultArticles("");
-    this.loadSavedArticles();
-  };
 
   loadResultArticles = (query) => {
     console.log(query);
     API.getNewArticles(query)
       .then(res => {
-          console.log(res);
-          this.setState({ results: res.data });
+        console.log(res.data.response.docs);
+        this.setState({ results: res.data.response.docs, topic: "", startyear: "", endyear: "" });
         }
       )
-      .catch(err => console.log(err));
-  };
-
-  loadSavedArticles = () => {
-    API.getArticles()
-      .then(res =>
-        this.setState({ saved: res.data, title: "", date: "", url: "" })
-      )
-      .catch(err => console.log(err));
-  };
-
-  saveArticle = (id) => {
-    API.saveArticle(id)
-      .then(res => this.loadSavedArticles())
-      .catch(err => console.log(err));
-  };
-
-  deleteArticle = (id) => {
-    API.deleteArticle(id)
-      .then(res => this.loadSavedArticles())
       .catch(err => console.log(err));
   };
 
@@ -65,6 +36,8 @@ class Articles extends Component {
   handleFormSubmit = (event) => {
     event.preventDefault();
     //if search was clicked
+    console.log("search clicked");
+
     if (this.state.topic) {
       //build query from topic, startyear, endyear
       let query = this.state.topic;
@@ -82,28 +55,45 @@ class Articles extends Component {
       <Container fluid>
         <div className="row">
           <div className="col-md-12">
-            <Search 
-              topic={this.state.topic}
-              endyear={this.state.endyear}
-              startyear={this.state.startyear}
-              handleInputChange={this.handleInputChange}
-              handleFormSubmit={this.handleFormSubmit}
-          />
+            <form>
+              <Input
+                value={this.state.topic}
+                onChange={this.handleInputChange}
+                name="topic"
+                placeholder="Topic (required)"
+              />
+              <Input
+                value={this.state.startyear}
+                onChange={this.handleInputChange}
+                name="startyear"
+                placeholder="Start Year"
+              />
+              <Input
+                value={this.state.endyear}
+                onChange={this.handleInputChange}
+                name="endyear"
+                placeholder="End Year"
+              />
+              <FormBtn
+                disabled={!(this.state.topic)}
+                onClick={this.handleFormSubmit}
+              >
+                Search
+              </FormBtn>
+            </form>
           </div>
         </div>
         <div className="row">
           <div className="col-md-12">
             <Results
-              articles={this.state.results}
-              saveArticle={this.saveArticle}
+              results={this.state.results}
             />
           </div>
         </div>
         <div className="row">
           <div className="col-md-12">
             <Save
-              articles={this.state.saved}
-              deleteArticle = {this.deleteArticle}
+              saved={this.state.saved}
             />
           </div>
         </div>

@@ -7,6 +7,7 @@ import Save from "./components/Save";
 import './App.css';
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
@@ -27,7 +28,14 @@ class App extends Component {
         </Router>
       </div>
     );
-  }
+  } 
+  
+  // ['', '/', '/articles', '/articles/:1', '/nyt', '/nyt/trump&begin_date=2017&end_date=2018'].forEach(function(path) {
+  //   Router.run(AppRoutes, path, function (Handler, state) {
+  //     var output = React.renderToString(<Handler />);
+  //     console.log(output, '\n');
+  //   });
+  // });
 }
 
 export default App;
