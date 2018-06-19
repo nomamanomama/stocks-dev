@@ -30,7 +30,7 @@ class Results extends Component {
   saveArticle = (...props) => {
 
     API.saveArticle(...props)
-      //.then(res => this.loadSavedArticles())
+      .then(res => this.props.onClick)
       .catch(err => console.log(err));
   };
   
@@ -41,9 +41,9 @@ class Results extends Component {
           <h1>Results</h1>
         </Jumbotron>
         {console.log ("article array in results: " + this.state.results)}
-        {this.state.results.length ? (
+        {this.props.results.length ? (
           <List>
-            {this.state.results.map(article => {
+            {this.props.results.map(article => {
               return (
                 <ListItem key={article._id}>
                   <Link to={article.web_url}>

@@ -14,17 +14,37 @@ class Articles extends Component {
     endyear: ""
   };
 
+  componentDidMount() {
+    this.loadSavedArticles();
+    //this.loadResultArticles()
+  };
 
   loadResultArticles = (query) => {
     console.log(query);
+ 
     API.getNewArticles(query)
       .then(res => {
         console.log(res.data.response.docs);
+        console.log(this.state);
         this.setState({ results: res.data.response.docs, topic: "", startyear: "", endyear: "" });
         }
       )
       .catch(err => console.log(err));
   };
+
+  loadSavedArticles = () => {
+    API.getArticles()
+      .then(res => {
+        console.log("database retrieval");
+        console.log(res.data);
+
+        this.setState({ saved: res.data, title: "", date: "", url: "" });
+
+      }
+      )
+      .catch(err => console.log(err));
+  };
+
 
   handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -87,13 +107,15 @@ class Articles extends Component {
           <div className="col-md-12">
             <Results
               results={this.state.results}
+              onClick={this.loadSavedArticles}
             />
           </div>
         </div>
         <div className="row">
           <div className="col-md-12">
             <Save
-              saved={this.state.saved}
+              saved = {this.state.saved}
+              onClick = {this.loadSavedArticles}
             />
           </div>
         </div>

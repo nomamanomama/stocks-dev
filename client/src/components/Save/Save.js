@@ -14,27 +14,30 @@ class Save extends Component {
     url: ""
   };
 
-  componentDidMount() {
-    this.loadSavedArticles();
-  };
 
-  loadSavedArticles = () => {
-    API.getArticles()
-      .then(res => {
-        console.log("database retrieval");
-        console.log(res.data);
+  // componentDidMount() {
+  //   this.loadSavedArticles();
+  // };
 
-        this.setState({ saved: res.data, title: "", date: "", url: "" });
 
-      }
-      )
-      .catch(err => console.log(err));
-  };
+
+  // loadSavedArticles = () => {
+  //   API.getArticles()
+  //     .then(res => {
+  //       console.log("database retrieval");
+  //       console.log(res.data);
+
+  //       this.setState({ saved: res.data, title: "", date: "", url: "" });
+
+  //     }
+  //     )
+  //     .catch(err => console.log(err));
+  // };
 
 
   deleteArticle = (id) => {
     API.deleteArticle(id)
-      .then(res => this.loadSavedArticles())
+      .then(res => this.props.onclick)
       .catch(err => console.log(err));
   };
 
@@ -45,9 +48,9 @@ class Save extends Component {
         <Jumbotron>
           <h1>Saved Articles</h1>
         </Jumbotron>
-        {this.state.saved.length ? (
+        {this.props.saved.length ? (
           <List>
-            {this.state.saved.map(article => (
+            {this.props.saved.map(article => (
               <ListItem key={article._id}>
                 <Link to={"/articles/" + article._id}>
                   <strong>

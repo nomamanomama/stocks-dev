@@ -1,13 +1,13 @@
 import React from "react";
+import "./Nav.css";
 
 const Nav = () => (
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a className="navbar-brand" href="/">
-      New York Times Article Scrubber
-    </a>
-    <p className="nav-item">
-      Search for and annotate articles of interest!
-    </p>
+
+      <a className="navbar-brand" href="/">
+        New York Times Article Scrubber
+      </a>
+
   </nav>
 );
 
