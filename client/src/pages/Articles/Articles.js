@@ -45,6 +45,22 @@ class Articles extends Component {
       .catch(err => console.log(err));
   };
 
+  saveArticle = (...props) => {
+
+    API.saveArticle(...props)
+      .then(res => {
+        this.loadSavedArticles();
+      })
+      .catch(err => console.log(err));
+  };
+
+ deleteArticle = (id) => {
+    API.deleteArticle(id)
+      .then(res => {
+        this.loadSavedArticles();
+      })
+      .catch(err => console.log(err));
+  };
 
   handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -108,6 +124,7 @@ class Articles extends Component {
             <Results
               results={this.state.results}
               onClick={this.loadSavedArticles}
+              saveArticle={this.saveArticle}
             />
           </div>
         </div>
@@ -116,6 +133,7 @@ class Articles extends Component {
             <Save
               saved = {this.state.saved}
               onClick = {this.loadSavedArticles}
+              deleteArticle={this.deleteArticle}
             />
           </div>
         </div>

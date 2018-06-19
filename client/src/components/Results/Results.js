@@ -27,12 +27,7 @@ class Results extends Component {
       .catch(err => console.log(err));
   };
 
-  saveArticle = (...props) => {
-
-    API.saveArticle(...props)
-      .then(res => this.props.onClick)
-      .catch(err => console.log(err));
-  };
+  
   
   render() {
     return (
@@ -60,7 +55,7 @@ class Results extends Component {
                   </p> */}
                   <SaveBtn 
                     id={"save" + article._id}
-                    onClick={() => this.saveArticle({
+                    onClick={() => this.props.saveArticle({
                       id:article._id, 
                       title:article.headline.main,
                       url: article.web_url,

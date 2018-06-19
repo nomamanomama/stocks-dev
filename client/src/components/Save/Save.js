@@ -8,7 +8,6 @@ import "./Save.css";
 
 class Save extends Component {
   state = {
-    saved: [],
     title: "",
     date: "",
     url: ""
@@ -35,11 +34,11 @@ class Save extends Component {
   // };
 
 
-  deleteArticle = (id) => {
-    API.deleteArticle(id)
-      .then(res => this.props.onclick)
-      .catch(err => console.log(err));
-  };
+  // deleteArticle = (id) => {
+  //   API.deleteArticle(id)
+  //     .then(res => this.props.onclick)
+  //     .catch(err => console.log(err));
+  // };
 
 
   render() {
@@ -59,7 +58,7 @@ class Save extends Component {
                 </Link>
                 <DeleteBtn 
                   id={"delete" + article._id}
-                  onClick={() => this.deleteArticle(article._id)} 
+                  onClick={() => this.props.deleteArticle(article._id)} 
                 />
               </ListItem>
             ))}
